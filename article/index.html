@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bootstrap Point</title>
+<meta name="description" content="A speculative-science essay on transport-limited visitors, the Kent Equation, and the day Earth learns to grow a body to order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080c;
+  --bg2:#0b0d14;
+  --ink:#e9e6dd;
+  --ink-soft:#bcb8ad;
+  --ink-faint:#8a877e;
+  --ink-dim:#7d7a72;
+  --line:#23252e;
+  --gold:#e0a85e;      /* biology / life / the body */
+  --gold-soft:#f1c48f;
+  --cyan:#6fd7e0;      /* the clock / technology */
+  --cyan-soft:#a7eaf0;
+  --violet:#9a8cff;
+  --paper:#11131b;
+  --maxw:39rem;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --display:"Fraunces",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{font-size:150%;scroll-behavior:smooth}
+@media(max-width:1024px){html{font-size:132%}}
+@media(max-width:760px){html{font-size:118%}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:1.3rem;line-height:1.72;
+  font-weight:380;letter-spacing:.002em;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+img{max-width:100%}
+a{color:var(--cyan-soft);text-decoration:none;border-bottom:1px solid rgba(111,215,224,.3)}
+a:hover{border-color:var(--cyan-soft)}
+
+/* ---------- reading progress ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:120;
+  background:linear-gradient(90deg,var(--cyan),var(--gold));box-shadow:0 0 12px rgba(111,215,224,.5)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;padding:7vh 1.4rem 9vh;overflow:hidden;background:var(--bg)}
+#starfield{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
+.hero-veil{position:absolute;inset:0;z-index:1;
+  background:radial-gradient(120% 90% at 50% 18%,rgba(7,8,12,0) 35%,rgba(7,8,12,.55) 72%,rgba(7,8,12,.95) 100%)}
+.hero-inner{position:relative;z-index:2;max-width:44rem}
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--cyan);margin:0 0 1.8rem;opacity:0;animation:fade 1.2s .2s forwards}
+h1.title{font-family:var(--display);font-weight:560;font-size:clamp(3rem,9vw,6.6rem);
+  line-height:.96;letter-spacing:-.022em;margin:0 0 1.6rem;
+  background:linear-gradient(180deg,#fff 18%,#d8d2c4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:0;animation:rise 1.4s .45s cubic-bezier(.2,.7,.2,1) forwards}
+.dek{font-family:var(--serif);font-weight:360;font-size:clamp(1.12rem,2.5vw,1.5rem);
+  line-height:1.55;color:var(--ink-soft);max-width:36rem;margin:0 auto 2.4rem;
+  opacity:0;animation:rise 1.4s .8s cubic-bezier(.2,.7,.2,1) forwards}
+.dek em{color:var(--gold-soft);font-style:italic}
+.byline{font-family:var(--sans);font-size:.84rem;letter-spacing:.02em;color:var(--ink-dim);
+  opacity:0;animation:fade 1.4s 1.25s forwards}
+.byline b{color:var(--ink-soft);font-weight:600}
+.scroll-cue{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);z-index:2;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-dim);
+  opacity:0;animation:fade 1.4s 1.7s forwards}
+.scroll-cue span{display:block;margin:.5rem auto 0;width:1px;height:34px;
+  background:linear-gradient(var(--ink-dim),transparent);animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.4);opacity:.3;transform-origin:top}50%{transform:scaleY(1);opacity:1;transform-origin:top}}
+@keyframes fade{to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:3;background:transparent}
+section{padding:1px 0}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 1.4rem}
+.chapter{font-family:var(--mono);font-size:.7rem;letter-spacing:.36em;text-transform:uppercase;
+  color:var(--cyan);text-align:center;margin:6rem 0 2.6rem;display:flex;align-items:center;gap:1rem;justify-content:center}
+.chapter::before,.chapter::after{content:"";height:1px;width:42px;background:linear-gradient(90deg,transparent,var(--line))}
+.chapter::after{background:linear-gradient(90deg,var(--line),transparent)}
+h2{font-family:var(--display);font-weight:520;font-size:clamp(1.9rem,5vw,3rem);line-height:1.06;
+  letter-spacing:-.018em;margin:.4rem 0 1.6rem;color:#fff}
+h3{font-family:var(--display);font-weight:560;font-size:1.45rem;letter-spacing:-.01em;color:var(--gold-soft);margin:2.6rem 0 .6rem}
+p{margin:0 0 1.45rem}
+.lede-first::first-letter{font-family:var(--display);float:left;font-size:5.4rem;line-height:.78;
+  font-weight:600;padding:.05em .12em 0 0;color:var(--gold)}
+.standfirst{font-size:1.32rem;line-height:1.6;color:var(--ink);font-weight:420}
+strong{color:#fff;font-weight:600}
+em.key{font-style:normal;color:var(--cyan-soft);border-bottom:1px dotted rgba(111,215,224,.4)}
+.small{font-family:var(--sans);font-size:.92rem;color:var(--ink-soft);line-height:1.6}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+/* ---------- pull quote ---------- */
+.pullquote{max-width:48rem;margin:4.5rem auto;padding:0 1.4rem;text-align:center}
+.pullquote p{font-family:var(--display);font-weight:420;font-style:italic;
+  font-size:clamp(1.6rem,4.2vw,2.5rem);line-height:1.25;color:#fff;letter-spacing:-.01em;margin:0}
+.pullquote .mark{display:block;font-size:3rem;color:var(--gold);line-height:0;margin-bottom:1.6rem;font-family:var(--display)}
+
+/* ---------- figures (full bleed) ---------- */
+.figure{max-width:62rem;margin:4rem auto;padding:0 1.4rem}
+.figure.wide{max-width:74rem}
+.panel{background:linear-gradient(180deg,var(--paper),#0c0e15);border:1px solid var(--line);
+  border-radius:14px;padding:1.6rem 1.5rem 1.3rem;box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+.panel h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--cyan);margin:0 0 1.1rem;display:flex;align-items:center;gap:.6rem}
+.panel h4 .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.caption{font-family:var(--sans);font-size:.82rem;line-height:1.55;color:var(--ink-dim);margin:1rem .2rem 0;text-align:left}
+.caption b{color:var(--ink-soft);font-weight:600}
+canvas.chart{width:100%;display:block;border-radius:8px}
+
+/* ---------- bell interactive ---------- */
+.bell-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.4rem;align-items:center}
+@media(max-width:640px){.bell-stage{grid-template-columns:1fr}}
+.bell-readout{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);line-height:1.7}
+.bell-readout .tone{font-size:1.05rem;color:var(--gold-soft)}
+.bell-readout .warn{color:#e0795e}
+
+/* ---------- sliders / controls ---------- */
+.controls{display:grid;gap:1.4rem;margin:.4rem 0 1.6rem}
+.control label{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--sans);font-size:.86rem;font-weight:600;color:var(--ink);margin-bottom:.5rem}
+.control label .val{font-family:var(--mono);font-size:.8rem;color:var(--cyan-soft);font-weight:500}
+.control .ends{display:flex;justify-content:space-between;font-family:var(--sans);font-size:.7rem;color:var(--ink-dim);margin-top:.35rem}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;
+  background:linear-gradient(90deg,var(--cyan),var(--gold));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+  background:#fff;border:4px solid var(--bg);box-shadow:0 0 0 1px var(--cyan),0 4px 14px rgba(0,0,0,.6);cursor:pointer;transition:transform .12s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid var(--bg);box-shadow:0 0 0 1px var(--cyan);cursor:pointer}
+
+.readout-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.4rem}
+@media(max-width:560px){.readout-row{grid-template-columns:1fr}}
+.stat{background:#0a0c12;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;text-align:center}
+.stat .num{font-family:var(--display);font-weight:600;font-size:2.3rem;line-height:1;color:#fff;letter-spacing:-.01em}
+.stat .num.mid{color:var(--gold-soft)}
+.stat .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-top:.5rem}
+.preset-row{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.3rem;justify-content:center;align-items:center}
+.preset-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-right:.3rem}
+.preset{font-family:var(--sans);font-size:.78rem;font-weight:600;color:var(--ink-soft);
+  background:#0a0c12;border:1px solid var(--line);border-radius:100px;padding:.45rem 1rem;cursor:pointer;transition:.15s}
+.preset:hover{border-color:var(--cyan);color:#fff}
+.preset.on{background:var(--cyan);color:#04161a;border-color:var(--cyan)}
+
+/* ---------- timeline / race ---------- */
+.race{position:relative;margin:2rem 0 1rem;padding-left:1.4rem;border-left:2px solid var(--line)}
+.race .node{position:relative;margin:0 0 1.8rem;opacity:0;transform:translateX(20px);transition:.8s}
+.race .node.in{opacity:1;transform:none}
+.race .node::before{content:"";position:absolute;left:-1.75rem;top:.45rem;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--cyan);box-shadow:0 0 10px rgba(111,215,224,.6)}
+.race .node.life::before{border-color:var(--gold);box-shadow:0 0 10px rgba(224,168,94,.6)}
+.race .yr{font-family:var(--mono);font-size:.82rem;color:var(--cyan-soft);font-weight:600}
+.race .node.life .yr{color:var(--gold-soft)}
+.race .txt{font-family:var(--sans);font-size:.94rem;color:var(--ink-soft);line-height:1.5;margin-top:.2rem}
+.race .txt b{color:#fff;font-weight:600}
+
+/* ---------- scenario ---------- */
+.scenario{background:linear-gradient(180deg,#0c0a12,#0a0c14);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.scenario .wrap{padding-top:1px;padding-bottom:1px}
+.dropline{font-family:var(--display);font-style:italic;color:var(--violet);font-size:1.05rem;letter-spacing:.02em;margin:0 0 .4rem}
+
+/* ---------- callout / honesty box ---------- */
+.callout{max-width:46rem;margin:3rem auto;padding:1.5rem 1.7rem;background:#0a0c12;
+  border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0}
+.callout p{font-family:var(--sans);font-size:.96rem;line-height:1.62;color:var(--ink-soft);margin:0 0 .8rem}
+.callout p:last-child{margin:0}
+.callout .h{font-family:var(--mono);font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;display:block}
+
+/* ---------- footer ---------- */
+footer{background:var(--bg2);border-top:1px solid var(--line);padding:4rem 1.4rem 6rem;margin-top:6rem}
+footer .wrap{max-width:46rem}
+footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin:0 0 1.4rem}
+.notes{font-family:var(--sans);font-size:.82rem;line-height:1.65;color:var(--ink-dim)}
+.notes p{margin:0 0 1rem}
+.notes b{color:var(--ink-soft)}
+.endmark{text-align:center;font-family:var(--display);color:var(--gold);font-size:1.5rem;margin:3rem 0;
+  animation:endpulse 4s ease-in-out infinite}
+@keyframes endpulse{0%,100%{opacity:.5;text-shadow:0 0 0 rgba(224,168,94,0)}50%{opacity:1;text-shadow:0 0 22px rgba(224,168,94,.55)}}
+
+/* ---------- ambient background field ---------- */
+#ambient{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+
+/* ---------- light traveling along panel borders ---------- */
+@property --ba{syntax:'<angle>';initial-value:0deg;inherits:false}
+.panel{position:relative;isolation:isolate}
+.panel::before{content:"";position:absolute;inset:-1px;border-radius:15px;padding:1px;z-index:-1;
+  background:conic-gradient(from var(--ba),transparent 0deg,rgba(111,215,224,0) 38deg,rgba(111,215,224,.5) 72deg,transparent 116deg,transparent 248deg,rgba(224,168,94,.45) 288deg,transparent 332deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:borbit 17s linear infinite;pointer-events:none}
+@keyframes borbit{to{--ba:360deg}}
+
+/* ---------- chapter divider: pulsing rules ---------- */
+.chapter::before,.chapter::after{background-size:220% 100%;animation:chapshim 7s ease-in-out infinite}
+@keyframes chapshim{0%,100%{background-position:0 0;opacity:.6}50%{background-position:100% 0;opacity:1}}
+
+/* ---------- quiet orbital rings behind pull quotes ---------- */
+.pullquote{position:relative;overflow:visible}
+.pullquote::before{content:"";position:absolute;left:50%;top:50%;width:360px;height:360px;
+  margin:-180px 0 0 -180px;border:1px dashed rgba(154,140,255,.13);border-radius:50%;
+  animation:slowspin 64s linear infinite;pointer-events:none;z-index:-1}
+.pullquote::after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;
+  margin:-115px 0 0 -115px;border:1px solid rgba(111,215,224,.10);border-radius:50%;
+  animation:slowspin 46s linear infinite reverse;pointer-events:none;z-index:-1}
+@keyframes slowspin{to{transform:rotate(360deg)}}
+
+/* ---------- reveal: gentle border draw on figures ---------- */
+.figure .panel{transition:box-shadow .9s ease}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .reveal{opacity:1;transform:none}
+  .scroll-cue span{animation:none}
+}
+@media(max-width:640px){
+  .lede-first::first-letter{font-size:4.2rem}
+  .standfirst{font-size:1.16rem}
+  .pullquote::before{width:240px;height:240px;margin:-120px 0 0 -120px}
+  .pullquote::after{width:150px;height:150px;margin:-75px 0 0 -75px}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<canvas id="ambient" aria-hidden="true"></canvas>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <canvas id="starfield"></canvas>
+  <div class="hero-veil"></div>
+  <div class="hero-inner">
+    <p class="kicker">A Speculative-Science Essay</p>
+    <h1 class="title">The Bootstrap Point</h1>
+    <p class="dek">Suppose something really has been crossing our skies for eighty years. A new hypothesis takes that idea seriously and lands somewhere stranger than invasion. The visitors might be miraculous in one narrow way and helpless in every other. If so, their smartest move is simply to <em>wait</em>. And there is now an equation for how long.</p>
+    <p class="byline">By <b>Gabriel Kent</b> &nbsp;·&nbsp; Rhomega Corp. &nbsp;·&nbsp; June 16, 2026</p>
+  </div>
+  <div class="scroll-cue">Scroll<span></span></div>
+</header>
+
+<main>
+
+<!-- ============ 1. THE LEDE ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">I · The Thing in the Sky</p>
+    <p class="lede-first standfirst reveal">The thing people swear they see hangs in the air with no wings and no flame. It drops like a stone, then stops like a thought. It changes direction at angles that would fold a fighter jet into scrap. Every serious account agrees on one point: whatever this is, it ignores the rules the rest of us fly by.</p>
+    <p class="reveal">The usual question is <em class="key">how does it move</em>. A better one is <em class="key">what else can it do?</em></p>
+    <p class="reveal">Because the honest answer might be: not very much.</p>
+    <p class="reveal">A century of movies has trained us to read a strange craft as a threat: the opening shot of an invasion, the tip of a fleet. The sightings describe something far smaller, a craft with room for a few passengers at most. It performs one impossible trick, moving a little matter very fast and very far, and shows no sign of doing anything else. No weapons that reach the ground, no cargo holds, no armies pouring out.</p>
+    <p class="reveal">This essay follows that single thread to its end. It begins with a deflation: these craft may be far less powerful than they look. It ends somewhere far more disquieting, in what we are about to do to ourselves.</p>
+    <div class="callout reveal">
+      <span class="h">First, the honest part</span>
+      <p>No government has confirmed that any of this is real. NASA's 2023 independent panel concluded that there is <b>“no conclusive evidence”</b> in the scientific literature that these objects are extraterrestrial, and that an alien explanation should be the <b>“hypothesis of last resort.”</b> The Pentagon's anomaly office reported in 2024 that it had <b>“not found even one case”</b> of off-world technology, and no evidence for recovered alien craft.</p>
+      <p>So everything that follows is an <b>“if.”</b> It is a chain of reasoning about a hypothetical, and it rests on premises we cannot yet confirm. It asks one narrow question: <em>if</em> the visitors were real, and <em>if</em> they were limited in a very particular way, what would the smart move be? The answer turns out to be specific, testable in principle, and far closer to home than the usual alien story.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. THE BELL ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">II · A Spike, Not a Pyramid</p>
+    <h2 class="reveal">Crossing the stars doesn't make you good at everything</h2>
+    <p class="reveal">An assumption hides inside every alien story: that a species clever enough to cross interstellar distance must be ahead of us at <em>all</em> of it, from biology to computers to weapons. Arrival, we assume, equals superiority across the board.</p>
+    <p class="reveal">There's no reason that has to be true. Imagine technology as a tree with many branches. We tend to picture an advanced civilization as a tall, even pyramid, high on every side. A real history is lumpier. A species' science is shaped by its biology, its accidents, its dead ends, plain luck. You could easily end up with a tree that is towering on one branch and stunted on the others, with deep mastery of one slice of physics and gaps everywhere else. Maybe they never built anything like our computers. Maybe their chemistry is clumsy. The branch they climbed happened to be the one that bends space.</p>
+    <p class="reveal">And there's a reason to think the one branch they climbed carries a hidden cost. The clue is a bell.</p>
+  </div>
+
+  <div class="figure reveal">
+    <div class="panel">
+      <h4><span class="dot"></span>The Bell — try loading it</h4>
+      <div class="bell-stage">
+        <canvas id="bell" class="chart" height="430" aria-label="An animated bell that distorts and detunes as mass is added"></canvas>
+        <div>
+          <div class="control">
+            <label for="bellMass">Mass packed into the craft <span class="val" id="bellMassV">empty</span></label>
+            <input type="range" id="bellMass" min="0" max="100" value="6">
+            <div class="ends"><span>just an observer</span><span>colonists &amp; cargo</span></div>
+          </div>
+          <div class="bell-readout">
+            <div class="tone" id="bellTone">Tone: pure · clean ring</div>
+            <div id="bellNote" style="margin-top:.6rem">A bell rings on one clear note. Its shape <em>is</em> the instrument.</div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>The bell analogy.</b> Drag the slider. A craft whose drive depends on some finely tuned field may work only inside a narrow envelope, like a bell, whose note lives in its exact shape and mass. Pack it with people, cargo, fuel, and an ecosystem, and you don't get a fuller bell. You get a cracked one. The capability is real, but it is <em>narrow.</em></p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p class="reveal">A bell rings because of its precise shape and mass. Pour lead into it, weld plates to its sides, change its geometry, and it doesn't ring louder. It thuds. The note is gone. If a craft's drive works the same way, tuned to a tight band of mass and form, then it has a hard ceiling. You can't just scale it up to haul a colony. Add too much and the trick stops working.</p>
+    <p class="reveal">Follow that limit and a portrait emerges that looks nothing like an invasion fleet. A craft like this would carry almost nothing: a few passengers, maybe just sensors. It would make a poor weapon, since by its very nature it slips around matter rather than striking it. And if anyone, even a government, had managed to recover or build one, it would be far too precious to risk, and far too valuable as a secret to burn. Impressive, yes. But good for getting a few somebodies somewhere fast, and almost nothing more.</p>
+  </div>
+
+  <div class="pullquote reveal">
+    <span class="mark">“</span>
+    <p>Arrival is one capability. Conquest is a completely different one. A key that opens the front door is not a house.</p>
+  </div>
+</section>
+
+<!-- ============ 3. THE COLONIZATION PROBLEM ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">III · The Problem With Moving In</p>
+    <h2 class="reveal">If you can't carry life, how do you ever settle anywhere?</h2>
+    <p class="reveal">Set the spaceships aside and think about what colonizing a world actually requires. This is moving <em>in</em>. It means moving life: bodies, yes, but also the crops they eat, the bacteria in their guts, the whole tangle of living systems a species needs to survive somewhere new. On Earth, a colony is heavy. It is farms and animals and millions of tons of biology, hauled and rebuilt.</p>
+    <p class="reveal">Now stretch that across the distance between stars, where even light takes years and a single gram costs a fortune to move. If our visitors really are mass-limited, if the bell can't be stuffed, then shipping a living colony across that gap stops being expensive and becomes impossible. The math simply never closes.</p>
+    <p class="reveal">So a transport-limited species faces a wall, and one move gets around it. Stop thinking about <strong>transport.</strong> Start thinking about <strong>fabrication.</strong></p>
+    <p class="reveal">Don't carry the colonists. <em class="key">Build them when you arrive.</em> A body, in the end, is information, a genome expressed in local materials. If you could write that information and grow it into a living thing using whatever a planet has lying around, you'd never need to ship a single passenger. You'd send a recipe, not a population.</p>
+    <p class="reveal">There's just one catch, and it's a big one: <em>they can't build the colonists either.</em> Not yet, and maybe not ever on their own. Which leads to the strangest and most patient idea in this whole story.</p>
+  </div>
+
+  <div class="figure reveal">
+    <div class="panel" style="text-align:center">
+      <h4 style="justify-content:center"><span class="dot"></span>Two ways to colonize</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;font-family:var(--sans)">
+        <div style="padding:1.2rem;border:1px solid var(--line);border-radius:10px;background:#0a0c12">
+          <div style="font-size:2.2rem">🚀</div>
+          <div style="font-weight:700;color:#fff;margin:.4rem 0;font-size:1rem">Transport</div>
+          <div style="font-size:.86rem;color:var(--ink-dim);line-height:1.5">Ship bodies, food, and ecosystems across the stars. Heavy. Slow. For a mass-limited craft, impossible.</div>
+        </div>
+        <div style="padding:1.2rem;border:1px solid var(--gold);border-radius:10px;background:#120e08">
+          <div style="font-size:2.2rem">🧬</div>
+          <div style="font-weight:700;color:var(--gold-soft);margin:.4rem 0;font-size:1rem">Fabrication</div>
+          <div style="font-size:.86rem;color:var(--ink-soft);line-height:1.5">Send the recipe. Grow the colonists on arrival, from local materials. Light as a signal, but only if someone can build the oven.</div>
+        </div>
+      </div>
+      <p class="caption" style="text-align:center"><b>The reframe.</b> Colonization stops being a shipping problem and becomes a manufacturing problem. That changes everything about what a visitor would do, and how long they'd be willing to wait.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. KNOWLEDGE LOCALITY ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">IV · Why Even a God Can't Skip School</p>
+    <h2 class="reveal">The knowledge they need can only be earned here</h2>
+    <p class="reveal">There's an obvious objection, and it's worth taking head-on. If these visitors are advanced enough to cross the galaxy, why on Earth would they sit around waiting for <em>our</em> slow, fumbling biology to catch up? Saying “they're advanced where it's convenient and backward where the story needs them to be” sounds like cheating.</p>
+    <p class="reveal">It points to the hinge the whole hypothesis turns on, and it rewards going slowly.</p>
+    <p class="reveal">To live on Earth, the visitors can't just grow a copy of themselves. They aren't built for our air, our gravity, our oceans of microbes, our particular chemistry. Dropped here raw, they'd die. What they need is an <strong>Earth-adapted hybrid</strong>, a body designed from scratch to thrive in our conditions, even if it carries something of them inside it.</p>
+    <p class="reveal">Designing that body splits into two very different questions:</p>
+    <p class="reveal"><strong>One:</strong> can you <em>write</em> the genome, spell out the sequence of genetic letters? That's essentially a computing problem. With enough processing power, you can search the space of sequences and print a string. Maybe they cracked this long ago.</p>
+    <p class="reveal"><strong>Two:</strong> can you know <em>which</em> design will actually grow into a healthy, living organism <em>on Earth?</em> That's a completely different kind of question, and no amount of raw intelligence can shortcut it:</p>
+    <p class="reveal">Whether a brand-new design will develop into a working body, surviving Earth's biochemistry, folding correctly during gestation, fending off Earth's immune challenges, is a fact <em>about Earth.</em> It isn't written in physics. It can't be transferred from their biology, because their biology isn't ours. The only way to learn it is to actually run the experiment: grow living things, here, over and over, and watch what happens. <em class="key">Knowledge that can only be earned by doing.</em></p>
+    <p class="reveal">Which means the visitors slam into the exact same wall we do. Their incredible advantage, fast ships and deep computing, is in the wrong currency. It buys the writing. It cannot buy the knowing. To get the knowing, you have to run Earth's biology forward, and that takes the same grinding work whether the hands doing it are human or not.</p>
+  </div>
+
+  <div class="pullquote reveal">
+    <span class="mark">“</span>
+    <p>They face the same gate we face. The gate is made of Earth, and Earth doesn't care who's knocking.</p>
+  </div>
+
+  <div class="wrap">
+    <p class="reveal">This makes waiting the rational move. The visitors would have two options. They could rebuild Earth's developmental biology in secret, from scratch, with no access to our labs, our hospitals, or our accumulated decades of failed experiments. Or they could let a planet full of clever life assemble that capability on its own, for its own reasons, and be present when the work was done.</p>
+    <p class="reveal">It's the difference between hacking a homestead out of raw wilderness and waiting for a town to grow up nearby, with its roads and power and hospitals, and building against <em>that.</em> The town is coming anyway. Why sweat alone in the woods?</p>
+    <p class="reveal">Which raises the only question that now matters: <strong>when does the town arrive?</strong> When will Earth be able to take a written design and grow it into a living body on demand, to order, on its own surface? Someone has tried to put a number on it.</p>
+  </div>
+</section>
+
+<!-- ============ 5. THE CLOCK / KENT EQUATION ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">V · The Clock</p>
+    <h2 class="reveal">An equation for the day we learn to grow a body</h2>
+    <p class="reveal">It's called the Kent Equation. It does for this question what the famous Drake Equation did for the odds of alien life: it takes one impossible-seeming question and breaks it into pieces that different experts can argue about separately.</p>
+    <p class="reveal">Where Drake gives you a single guess at a number, the Kent Equation gives you a <em>clock.</em> It estimates a quantity the paper calls <strong>K(t)</strong>: the probability that, by a given year, a civilization can take genetic information and turn it into a living, viable body on its own world. The world's arrival at that ability is the <strong>bootstrap point</strong>, the moment a planet can, in effect, boot up life to specification.</p>
+    <p class="reveal">K behaves like a tide coming in, a curve that climbs from 0 (no chance) toward 1 (basically certain), slowly at first, then faster, as the underlying technology matures. Three things push the tide, stacked one on top of the next:</p>
+  </div>
+
+  <div class="figure reveal">
+    <div class="panel">
+      <h4><span class="dot"></span>The substrate — three layers that must all be high</h4>
+      <canvas id="substrate" class="chart" height="400" aria-label="Three stacked curves: energy, computation, and biological throughput rising over time"></canvas>
+      <p class="caption"><b>Energy → Computation → Biology.</b> Energy powers the computers. The computers run the inference that designs sequences and models cells. And both feed the slow, physical work of biology experiments: growing embryos, building organs, running the lab. They're combined so that a near-zero in <em>any</em> layer drags the whole score toward zero: a world drowning in energy and lab robots but with no real computing can't do this, and the math knows it. The chain is only as strong as its weakest link.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p class="reveal">On top of those three sits one more factor: <strong>artificial intelligence</strong>, but not as another layer of raw capacity. AI enters as an <em class="key">accelerant</em>, a multiplier on how fast a civilization converts raw capacity into solved problems. Give a field the same computers and the same data, and good AI lets it crack problems years sooner. It can also work in reverse: fear, regulation, and misuse act as drag, slowing the conversion below baseline. The equation allows for both.</p>
+    <p class="reveal">The equation is completely silent about <em>who</em> wants the bodies. It only asks when a world <em>can</em> make them. When can this planet grow a body? That question comes logically before, and stands entirely apart from, the question of who might want to occupy one. The aliens are an optional story you bolt on afterward. The clock ticks the same with or without them.</p>
+    <p class="reveal">That separation is what makes the whole thing more than a parlor story. You can throw out every word about visitors and keep the clock. And the clock is built from numbers you can actually look up.</p>
+  </div>
+</section>
+
+<!-- ============ 6. TWO GATES ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">VI · Two Gates: Writing and Growing</p>
+    <h2 class="reveal">One of these is nearly solved. The other is a wall.</h2>
+    <p class="reveal">Making a body to order takes two distinct feats, and the difference between them is the most important idea in this entire piece.</p>
+    <p class="reveal">The first gate is <strong>writing</strong>: physically spelling out a complete genome, letter by letter, with no mistakes. Think of it as extraordinarily advanced printing. It's hard in a tractable way, a problem of throughput, cost, and error-checking, exactly the sort of problem more computing and better AI chew through fast. On this front we are already moving.</p>
+    <p class="reveal">The second gate is <strong>growing</strong>: taking that written sequence and coaxing it through the long process of development, from a single cell into a living, breathing, organized body. This is the wall. You cannot calculate your way past it. To know whether a never-before-existing design will actually grow, you have to <em>grow it</em> and watch, and watching takes real time, real wombs, real biology. AI helps far less here, because there is no shortcut around running the process itself.</p>
+    <p class="reveal">Because the bootstrap point only arrives once <em>both</em> gates are open, and because growing lags so far behind writing, the date is set entirely by the slow gate. Writing crosses early and then waits. Growing is the one that keeps us out.</p>
+  </div>
+
+  <div class="figure wide reveal">
+    <div class="panel">
+      <h4><span class="dot"></span>Why the date is set by the slow gate</h4>
+      <canvas id="gates" class="chart" height="480" aria-label="Two rising curves: genome writing crosses early, body growing crosses much later"></canvas>
+      <p class="caption"><b>Writing crosses first; growing binds.</b> The cyan curve, our ability to <em>write</em> a genome at human scale, climbs early, lifted by computing and AI. The gold curve, our ability to <em>grow</em> a designed body, drags far behind, gated by knowledge that only real experiments can produce. The bootstrap point waits on the gold curve. If you want to know how close the world is, <b>the signal to watch is not genome-printing headlines but progress in the embryo and the artificial womb.</b></p>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <span class="h">The one sharp signal</span>
+    <p>This is the most useful thing the framework offers, and it's worth pinning down. The progress that grabs headlines (“scientists synthesize a genome,” “AI designs a protein”) is the <b>writing</b> gate. It is real, and it is <b>not</b> the thing to watch. Tracking it would make you think the bootstrap point is closer than it is.</p>
+    <p>The real countdown lives in quieter news: <b>how long can an embryo grow outside a body? Do lab-grown embryo models develop a beating heart, or a brain? How early in pregnancy can an artificial womb take over?</b> That's the gold curve. That's the clock that matters.</p>
+  </div>
+</section>
+
+<!-- ============ 7. WHERE WE ARE ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">VII · Where We Actually Stand</p>
+    <h2 class="reveal">The frontier is closer than it feels, and the wall sits exactly where the theory says</h2>
+    <p class="reveal">Take the two gates in turn. Writing is racing ahead, while growing stays stuck precisely where the equation predicts.</p>
+
+    <h3 class="reveal">The writing gate: already at genome scale</h3>
+    <p class="reveal">Writing DNA from scratch is no longer science fiction. In 2010, a team led by Craig Venter's institute built a working bacterium run entirely by a chemically synthesized genome of about a million genetic letters. By the following decade, a 250-scientist international consortium was composing the chromosomes of baker's yeast, a far more complex organism, letter by letter: roughly twelve million letters of redesigned DNA. The human genome is about three billion letters, more than two hundred times larger, and nobody has written one. The obstacles are throughput, cost, and accuracy: exactly the kind of problem that falls to faster machines and better AI. And in 2025 a major effort, backed by the Wellcome Trust, openly set out to build the tools for a synthetic human chromosome. Writing is being attacked head-on.</p>
+    <p class="reveal">Meanwhile AI has shown what it can do to biology's hardest reading-and-writing problems. Systems like AlphaFold cracked a decades-old puzzle, predicting the folded shape of a protein from its sequence, and newer versions reach beyond single proteins to model the molecules of life interacting together. That work shared the 2024 Nobel Prize in Chemistry. The language of life, it turns out, is something machines are learning to read and write with real speed.</p>
+
+    <h3 class="reveal">The growing gate: stuck at the edges of development</h3>
+    <p class="reveal">Now the wall. Progress here is real but revealing: it reaches only the <em>ends</em> of development, never the long middle where a body is actually built.</p>
+    <p class="reveal">In 2021, scientists grew mouse embryos in a jar, outside any womb, from before the body plan is laid down through the early forming of organs, about six days of development entirely outside a mother. Then came “embryo models” built from stem cells, with no sperm and no egg. At <em>mouse</em> scale, by 2022, these models reached roughly the midpoint of development, complete with a beating heart and the first folds of a brain. It was a genuine glimpse of a body assembling itself from instructions alone.</p>
+    <p class="reveal">Step up to <em>human</em> scale and the frontier collapses backward, exactly as the theory predicts. Human embryo models, demonstrated in 2023, stall at around the two-week stage. They form the scaffolding of life, a yolk sac and the precursors of a placenta, and then they stop, with no beating heart and no brain. By long-standing rule and basic technical limits, even ordinary human embryos are grown in the lab for only about two weeks. The long middle of human development, the stretch that turns a blueprint into an organized animal, remains entirely untouched as of today.</p>
+    <p class="reveal">At the other end of pregnancy, the artificial womb is inching inward. A famous experiment kept premature lambs alive and growing for weeks inside a fluid-filled “biobag,” at a stage of development close to a human infant of 23 or 24 weeks. In 2023, a U.S. FDA advisory panel met to discuss how such a system might one day be tested in the most premature human babies. No trial has been approved, but the question is now openly on the table. (The earliest babies who survive today are born at around 21 weeks.) Yet all of this covers only the <em>final</em> stretch of gestation, the easier part, where a nearly finished body just needs more time and support. The hard frontier, the very beginning, where a single cell organizes itself into a creature, has no working substitute at all.</p>
+    <p class="reveal">Those two paragraphs hold the whole argument in miniature. <strong>We can write at genome scale. We cannot grow past the very first chapter.</strong> Writing sprints; growing crawls. The wall is exactly where the theory said it would be.</p>
+
+    <h3 class="reveal">And the stack underneath is rising fast</h3>
+    <p class="reveal">Meanwhile the three layers that power all of it, energy, computing, and lab capacity, are climbing on steep curves. The compute poured into the largest AI systems has been multiplying by roughly fivefold <em>every year</em> since 2020, even as the cost of each calculation keeps falling. The electricity to run it is being built out so fast that data centers alone are on track to roughly double their share of world power by 2030. And in the lab, robotic “self-driving” systems have begun running experiments around the clock, with little human hand-holding. Each of those is a real, trackable number with a real, trackable trend. That is what lets us do something earlier versions of this story never could: actually run the clock.</p>
+  </div>
+</section>
+
+<!-- ============ 8. THE INTERACTIVE ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">VIII · Run the Clock Yourself</p>
+    <h2 class="reveal">When does the tide come in?</h2>
+    <p class="reveal">The equation doesn't hand you a date. It hands you a <em>shape</em>, and the date depends on what you believe about three things. Move the sliders below and watch the bootstrap point slide with you. The bold gold curve is the one that matters: the rising probability that Earth can grow a body to order. The faint line behind it is the writing gate, which crosses early and then waits.</p>
+  </div>
+
+  <div class="figure wide reveal">
+    <div class="panel">
+      <h4><span class="dot"></span>The Kent Equation — interactive model</h4>
+
+      <div class="preset-row" style="margin-top:.2rem;margin-bottom:1.3rem">
+        <span class="preset-label">Scenario:</span>
+        <button class="preset on" data-preset="base">Aggressive baseline</button>
+        <button class="preset" data-preset="opt">Techno-optimist</button>
+        <button class="preset" data-preset="cons">Cautious</button>
+        <button class="preset" data-preset="skeptic">Deep skeptic</button>
+      </div>
+
+      <canvas id="kent" class="chart" height="500" aria-label="Interactive probability curve for the bootstrap point over time"></canvas>
+
+      <div class="readout-row">
+        <div class="stat"><div class="num" id="y10">—</div><div class="lbl">First plausible (10%)</div></div>
+        <div class="stat"><div class="num mid" id="y50">—</div><div class="lbl">Coin-flip year (50%)</div></div>
+        <div class="stat"><div class="num" id="y90">—</div><div class="lbl">Near-certain (90%)</div></div>
+      </div>
+
+      <div class="controls" style="margin-top:1.8rem">
+        <div class="control">
+          <label for="sAI">How much does AI accelerate biology? <span class="val" id="sAIv"></span></label>
+          <input type="range" id="sAI" min="0" max="100" value="56">
+          <div class="ends"><span>skeptic · AI is hype</span><span>believer · AI transforms the lab</span></div>
+        </div>
+        <div class="control">
+          <label for="sDiff">How hard is it to grow a body? <span class="val" id="sDiffv"></span></label>
+          <input type="range" id="sDiff" min="0" max="100" value="40">
+          <div class="ends"><span>“just engineering”</span><span>“a deep mystery”</span></div>
+        </div>
+        <div class="control">
+          <label for="sInv">Global push on the biology stack <span class="val" id="sInvv"></span></label>
+          <input type="range" id="sInv" min="0" max="100" value="78">
+          <div class="ends"><span>slow &amp; cautious</span><span>all-out, crash effort</span></div>
+        </div>
+      </div>
+
+      <p class="caption"><b>This is a structure, not a prophecy.</b> The underlying paper is explicit that it does not calibrate the equation: the real-world “required levels” are genuinely unknown. These curves use illustrative, aggressive-but-not-outlandish settings. The coin-flip year swings hard as you nudge a single slider, and that sensitivity <em>is</em> the honest message: small differences in what you believe about the wall move the date by decades. Even the gloomiest setting still crosses eventually. The drag slows the tide; it doesn't stop it.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p class="reveal">Play with it long enough and one feeling sets in. Push every slider to its most skeptical corner and the date drifts toward the end of the century, but it still comes. Nudge toward optimism and it lands within the lifetimes of people reading this. There's no setting that says <em>never.</em> That holds by design, and it is the central, uncomfortable claim: this is a tide. The only real question is the year.</p>
+  </div>
+</section>
+
+<!-- ============ 9. THE RACE WE CAN'T STOP ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">IX · The Race We Can't Call Off</p>
+    <h2 class="reveal">Could we simply choose not to cross?</h2>
+    <p class="reveal">If the bootstrap point is such a big deal, the natural human reaction is to refuse: pull the brakes, decide as a species to stop short of the line.</p>
+    <p class="reveal">It's a fair hope, and the honest answer is hard. We <em>can</em> slow specific things. Reproductive human cloning is banned almost everywhere; bioweapons are bound by treaty. Single technologies can be reined in. The bootstrap point is a <strong>bundle</strong>: fertility medicine, embryo research, lab automation, AI for biology, artificial wombs to save premature babies. Every strand is pulled forward by its own powerful, mostly benevolent reasons, whether to cure disease, to help people have children, or to understand ourselves.</p>
+    <p class="reveal">No one is building the bootstrap point on purpose. It assembles itself out of a thousand good intentions. And there is no global hand that could freeze all of those strands at once. The crossing is <em>overdetermined</em>, driven from so many directions that stopping it would mean halting medicine itself. We are racing toward it whether or not anyone decided to race.</p>
+  </div>
+
+  <div class="pullquote reveal">
+    <span class="mark">“</span>
+    <p>Nobody is building this on purpose. It assembles itself out of a thousand good intentions, and that is exactly why it can't be stopped.</p>
+  </div>
+
+  <div class="wrap">
+    <p class="reveal">This cuts two ways, and the theory is honest about both. If you're a patient visitor, this is wonderful news: you don't have to lift a finger. The host will build your colonization machinery for you, for its own reasons, on its own schedule. The wait is safe precisely because the outcome is already determined.</p>
+    <p class="reveal">But the same fact that makes the wait safe is what makes the whole hypothesis so hard to test. If Earth marches toward the bootstrap point on its own, with or without anyone watching from above, then an Earth with patient visitors and an Earth with none look <em>exactly the same</em> from inside the lab: the same discoveries, the same headlines, the same arguments. The watchers, if they exist, cause none of it. They just wait.</p>
+  </div>
+</section>
+
+<!-- ============ 10. IF SOMEONE IS WAITING ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">X · If Someone Is Waiting</p>
+    <h2 class="reveal">The one thread that could give them away</h2>
+    <p class="reveal">Suppose someone is out there, patient, watching the gold curve climb. How could we ever tell? Almost everything they'd care about, our science and our turmoil, would unfold identically in an empty universe. A real difference could hide in only one place: <em>their own behavior.</em></p>
+    <p class="reveal">If the visitors are real and waiting on the clock, their visibility should <strong>track the clock.</strong> While the bootstrap point is far off they stay quiet and hidden, because contact then would only risk panic and disruption, possibly scaring us off the very research they're waiting for. As the clock approaches the threshold they grow more visible and edge toward contact, because the cost of revealing themselves drops and the value of coordinating rises.</p>
+    <p class="reveal">That's the single testable fingerprint the hypothesis leaves: <em class="key">a correlation between how visible they are and how close we are.</em> In a universe with no visitors, there's nothing to correlate. Alien activity rising in step with the biology, especially paired with word that some government had quietly figured this out, would be the signature to watch for. You might expect exactly the things our era is starting to show: more sightings, mounting pressure for disclosure, official hearings, and a slow drift in the language itself, from “aliens” toward the cooler, more careful phrase <em>“non-human intelligence.”</em></p>
+    <div class="callout reveal">
+      <span class="h">What the record actually shows</span>
+      <p>None of this is proof, and it must be held lightly. In 2023, a former intelligence officer told Congress under oath that the U.S. held recovered <b>“non-human craft”</b> and even <b>“non-human biologics.”</b> The Pentagon flatly denied it, and its review office later reported finding <b>no verifiable evidence</b> for any of it. The claims were secondhand. They remain unproven.</p>
+      <p>But the public mood has shifted regardless. By 2024 the government logged hundreds of new sightings a year; most resolve into balloons and drones, while a stubborn handful do not. In recent polling, roughly <b>4 in 10</b> Americans say some sightings are alien craft, and nearly <b>three-quarters</b> believe that if the government had real evidence, it would hide it. The hypothesis doesn't need any of this to be true. It only says: <em>this is where to look, and this is what rising pressure would mean.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. IMAGINE IT'S TRUE ============ -->
+<section class="scenario">
+  <div class="wrap">
+    <p class="chapter reveal">XI · Imagine It's True</p>
+    <h2 class="reveal">A short story we may be living inside</h2>
+    <p class="dropline reveal">What follows is imagination: a single thread pulled to its end.</p>
+    <p class="reveal">Imagine the decade we cross the line in earnest. Forget the press release about printed DNA; this is the real thing, the first body designed from a blank page and grown, start to finish, into something that lives and breathes. The bootstrap point, reached. The tide comes in.</p>
+    <p class="reveal">In this story, the quiet doesn't last. Within a few short years comes contact: careful, deliberate, on terms chosen by whoever has been waiting. And then the discovery that reorders everything. Facilities have been running quietly for longer than anyone admits, growing bodies that were never quite human, designed for Earth and carrying something not entirely ours. Local, adapted, alive.</p>
+    <p class="reveal">What follows is an argument, long and painful and unlike any in our history. What <em>are</em> they? People? Property? A new kind of citizen with a claim on the world that grew them? A rights struggle measured in generations rather than battles, fought in courtrooms and parliaments and kitchens, over beings who look back at us with our own borrowed eyes.</p>
+    <p class="reveal">And somewhere in the middle of that argument, the shape of the whole thing finally comes clear. Seen this way, it was always a migration, one so patient it doesn't even look like movement. You don't ship yourself across the stars. You wait, for as long as it takes, until a world learns to grow bodies. And then you grow there: local, adapted, as many times as you like. Colonization not by conquest, but by cultivation. The most patient strategy imaginable, run by something with all the time in the universe.</p>
+  </div>
+</section>
+
+<!-- ============ 12. THE CLOSE ============ -->
+<section>
+  <div class="wrap">
+    <p class="chapter reveal">XII · The Part That Needs No Aliens</p>
+    <h2 class="reveal">Pull the visitors out, and the clock still ticks</h2>
+    <p class="reveal">Take the aliens away, the thing the whole hypothesis was built to survive. Suppose the sky is empty and always was: no ships, no watchers, no patient strategy, nothing but weather and imagination and the occasional weather balloon.</p>
+    <p class="reveal">The clock still runs.</p>
+    <p class="reveal">The bootstrap point is a fact about <em>us.</em> The day Earth can take a written design and grow it into a living body to order is coming on its own, pushed by our own hands, by medicine and computing and a thousand good reasons, and quite possibly within the lifetimes of people alive right now. Whether or not anyone is waiting to use that power, we are about to hold it.</p>
+    <p class="reveal">A species that can grow a body to order has become something else, something that has taken the oldest privilege in the universe, the making of new life, out of the hands of chance and into its own. That has nothing to do with flying saucers. The saucers were only the strange question that made us turn around and notice the clock.</p>
+    <p class="reveal standfirst" style="margin-top:2.4rem">The visitors may be a story. The clock is real. And the strangest part of the whole idea is the part that needs no aliens at all: right now, without quite meaning to, we are teaching the planet to grow us. The only open questions are how soon we finish — and whether anyone else already knew this was coming, and is simply waiting for us to be done.</p>
+    <div class="endmark reveal">✦</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h4>About this piece</h4>
+    <div class="notes">
+      <p>This essay is a popular-audience companion to two technical papers by Gabriel Kent (Rhomega Corp., 2026): <b>“The Kent Equation: A Time-Indexed Threshold Model for the Onset of Local Biological Self-Instantiation”</b> and <b>“The Alien Bootstrap Hypothesis: A Conditional Strategic Model of Transport-Limited Colonization.”</b> Both are explicitly speculative and conditional. They do not claim that extraterrestrial visitation is real; they ask what would follow <i>if</i> a specific set of premises held, and insist on reasoning that stays honest even where the premises cannot be secured.</p>
+      <p><b>On the evidence.</b> The official record finds no confirmed extraterrestrial visitation. The NASA UAP Independent Study Team (Final Report, Sept. 14, 2023) found no conclusive evidence in the peer-reviewed literature that reported phenomena are extraterrestrial, treating that as the “hypothesis of last resort.” The U.S. All-domain Anomaly Resolution Office (Historical Record Report, Vol. I, 2024; annual report, Nov. 2024) reported no confirmed off-world technology and no verified evidence of recovered or reverse-engineered craft. Congressional testimony alleging the contrary (2023) remains unverified and officially denied.</p>
+      <p><b>On the interactive model.</b> The curve is a faithful re-creation of the paper's one-gate form — a cumulative probability driven by a stacked substrate index (energy, computation, biological throughput, combined as a weighted geometric mean) and a two-sided AI accelerant, with the developmental gate binding and genome synthesis crossing earlier. Per the paper, it is a <i>structure, not a calibration</i>: the numerical settings here are illustrative and deliberately aggressive, chosen to let readers explore how sensitive the timing is to assumptions. They are not a prediction of any specific year.</p>
+      <p><b>Science touchpoints.</b> The writing gate: the first synthetic-genome bacterium (J. Craig Venter Institute, 2010); the synthetic-yeast (Sc2.0) chromosome effort (Boeke et al.; ten papers, 2023 — note that a single fully consolidated synthetic strain is not yet reported complete); the Wellcome-backed synthetic human genome project (2025); and AI structure-prediction and design (AlphaFold, 2021; AlphaFold 3, 2024; 2024 Nobel Prize in Chemistry). The growing gate: ex-utero mouse embryo culture to late organogenesis (Hanna lab, Nature, 2021); stem-cell-based embryo models reaching a beating heart and brain at <i>mouse</i> scale (2022) but only ~2 weeks at <i>human</i> scale (2023, no heart or brain); and artificial-womb research for premature infants (the lamb “biobag,” 2017; FDA advisory discussion, 2023 — no human trial approved as of this writing). Earlier related ideas — the Drake Equation, the Zoo Hypothesis (Ball, 1973), and Directed Panspermia (Crick &amp; Orgel, 1973) — are each explicitly distinguished from this hypothesis in the source papers.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- reading progress ---------- */
+  var prog = document.getElementById('progress');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    prog.style.width = (max>0 ? (h.scrollTop/max*100) : 0) + '%';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- reveal on scroll ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal, .race .node').forEach(function(el){ io.observe(el); });
+
+  /* ---------- high-DPI canvas helper ---------- */
+  function fit(cv, h){
+    var dpr = Math.min(window.devicePixelRatio||1, 2);
+    var w = cv.clientWidth || cv.parentNode.clientWidth;
+    cv.width = w*dpr; cv.height = (h||cv.clientHeight)*dpr;
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {ctx:ctx, w:w, h:(h||cv.clientHeight)};
+  }
+
+  /* ================= STARFIELD ================= */
+  (function(){
+    var cv = document.getElementById('starfield');
+    var ctx, W, H, stars, raf, t0=null;
+    function init(){
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      W=cv.clientWidth; H=cv.clientHeight;
+      cv.width=W*dpr; cv.height=H*dpr; ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+      var n=Math.round(W*H/9000); stars=[];
+      for(var i=0;i<n;i++){
+        stars.push({x:Math.random()*W,y:Math.random()*H,z:Math.random(),
+          r:Math.random()*1.3+.2, tw:Math.random()*6.28, sp:Math.random()*.6+.2});
+      }
+    }
+    function draw(ts){
+      if(t0===null)t0=ts; var t=(ts-t0)/1000;
+      var sc = window.scrollY||0;
+      ctx.clearRect(0,0,W,H);
+      // faint nebula glow
+      var g=ctx.createRadialGradient(W*0.5,H*0.30,0,W*0.5,H*0.30,Math.max(W,H)*0.7);
+      g.addColorStop(0,'rgba(40,60,90,0.18)'); g.addColorStop(.5,'rgba(30,30,55,0.07)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+      for(var i=0;i<stars.length;i++){
+        var s=stars[i];
+        var py = s.y - sc*0.15*(0.3+s.z);   // parallax
+        if(py<-5) py += H+10;
+        var a = 0.35 + 0.65*Math.abs(Math.sin(s.tw + t*s.sp));
+        a *= (0.4+0.6*s.z);
+        ctx.beginPath();
+        ctx.arc(s.x, py, s.r*(0.6+s.z), 0, 6.2832);
+        ctx.fillStyle='rgba('+(190+s.z*50|0)+','+(205+s.z*40|0)+',230,'+a.toFixed(3)+')';
+        ctx.fill();
+      }
+      raf=requestAnimationFrame(draw);
+    }
+    function start(){ cancelAnimationFrame(raf); init(); if(!reduced){ raf=requestAnimationFrame(draw);} else { ctx.clearRect(0,0,W,H); for(var i=0;i<stars.length;i++){var s=stars[i];ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fillStyle='rgba(200,210,230,'+(0.3+0.5*s.z)+')';ctx.fill();} } }
+    start();
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(start,200);});
+  })();
+
+  /* ================= AMBIENT FIELD (whole page) ================= */
+  (function(){
+    var cv=document.getElementById('ambient'); if(!cv) return;
+    var ctx,W,H,parts,raf,t0=null,last=0;
+    var blobs=[
+      {hue:'70,120,150',x:.22,y:.28,r:.55,px:1.7,py:0.3,sx:.07,sy:.05},
+      {hue:'150,120,60',x:.80,y:.66,r:.62,px:2.4,py:1.1,sx:.05,sy:.07},
+      {hue:'120,95,165',x:.52,y:.92,r:.5,px:4.0,py:3.1,sx:.06,sy:.04}
+    ];
+    function init(){
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      W=cv.clientWidth; H=cv.clientHeight;
+      cv.width=W*dpr; cv.height=H*dpr; ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+      var n=Math.round(W*H/30000); parts=[];
+      for(var i=0;i<n;i++) parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+.3,
+        sp:Math.random()*7+3,tw:Math.random()*6.28,dir:Math.random()<.5?-1:1});
+    }
+    function frame(ts){
+      raf=requestAnimationFrame(frame);
+      if(ts-last<33){return;} last=ts;            // ~30fps, gentle on the CPU
+      if(t0===null)t0=ts; var t=(ts-t0)/1000;
+      ctx.clearRect(0,0,W,H);
+      for(var b=0;b<blobs.length;b++){ var o=blobs[b];
+        var bx=(o.x+Math.sin(t*o.sx+o.px)*0.06)*W, by=(o.y+Math.cos(t*o.sy+o.py)*0.05)*H;
+        var R=o.r*Math.max(W,H)*0.6;
+        var g=ctx.createRadialGradient(bx,by,0,bx,by,R);
+        g.addColorStop(0,'rgba('+o.hue+',0.05)'); g.addColorStop(1,'rgba('+o.hue+',0)');
+        ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+      }
+      for(var i=0;i<parts.length;i++){ var p=parts[i];
+        var y=p.y - t*p.sp*p.dir; y=((y%H)+H)%H;
+        var a=0.07+0.10*Math.sin(p.tw+t*0.5);
+        ctx.beginPath(); ctx.arc(p.x,y,p.r,0,6.28); ctx.fillStyle='rgba(155,175,215,'+a.toFixed(3)+')'; ctx.fill();
+      }
+    }
+    function start(){ cancelAnimationFrame(raf); init(); if(!reduced){ last=0; raf=requestAnimationFrame(frame);} else { ctx.clearRect(0,0,W,H); } }
+    start();
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(start,250);});
+  })();
+
+  /* ================= BELL ================= */
+  (function(){
+    var cv=document.getElementById('bell'); if(!cv) return;
+    var slider=document.getElementById('bellMass');
+    var massV=document.getElementById('bellMassV'), tone=document.getElementById('bellTone'),
+        note=document.getElementById('bellNote');
+    var mass=parseFloat(slider.value)/100, raf, t0=null;
+    function labelFor(m){
+      if(m<0.10) return ['empty','Tone: pure · clean ring',false,'A bell rings on one clear note. Its shape <em>is</em> the instrument.'];
+      if(m<0.35) return ['light','Tone: warm · still ringing',false,'A few passengers. The note dulls a little, but it holds.'];
+      if(m<0.62) return ['heavy','Tone: muddy · straining',false,'Now it&rsquo;s working hard. The ring is going flat.'];
+      if(m<0.85) return ['overloaded','Tone: detuned · buzzing',true,'Packed with cargo, the note breaks apart. The drive is losing its envelope.'];
+      return ['colony-scale','Tone: dead · a thud',true,'A full colony&rsquo;s worth of mass. No ring at all. The bell is just a lump of metal now. The trick is gone.'];
+    }
+    function draw(ts){
+      if(t0===null)t0=ts; var t=(ts-t0)/1000;
+      var d=fit(cv,430), ctx=d.ctx, W=d.w, H=d.h;
+      ctx.clearRect(0,0,W,H);
+      var cx=W*0.44, cy=H*0.44, m=mass;
+      // distortion grows with mass
+      var warp = m*m;
+      // sound waves
+      var maxR=Math.min(W,H)*0.62;
+      var ringClarity = Math.max(0, 1-m*1.25);
+      for(var k=0;k<5;k++){
+        var phase=(t*0.6 + k*0.7)%1;
+        var r=phase*maxR;
+        var alpha=(1-phase)*0.5*ringClarity + 0.04;
+        ctx.beginPath();
+        // distort the wave circle when overloaded
+        for(var a=0;a<=6.2832;a+=0.18){
+          var jitter = warp* (Math.sin(a*7 + t*9 + k)*0.5+Math.sin(a*3-t*5)*0.5) * r*0.16;
+          var rr=r+jitter;
+          var x=cx+Math.cos(a)*rr, y=cy+Math.sin(a)*rr*0.9;
+          if(a===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle='rgba(111,215,224,'+alpha.toFixed(3)+')';
+        ctx.lineWidth=1.4; ctx.stroke();
+      }
+      // the bell shape (distorts with mass)
+      ctx.save(); ctx.translate(cx,cy);
+      var bscale=Math.max(1,Math.min(W,H)/300); ctx.scale(bscale,bscale);
+      var sag = 1 + warp*0.5;          // bell widens/sags
+      var lip = warp*18*Math.sin(t*8); // jitter at overload
+      ctx.beginPath();
+      ctx.moveTo(0,-46);
+      ctx.bezierCurveTo(26*sag,-44, 30*sag,-6, 40*sag,30);
+      ctx.quadraticCurveTo(42*sag,42, 30*sag+lip,46);
+      ctx.lineTo(-30*sag-lip,46);
+      ctx.quadraticCurveTo(-42*sag,42, -40*sag,30);
+      ctx.bezierCurveTo(-30*sag,-6, -26*sag,-44, 0,-46);
+      ctx.closePath();
+      var grad=ctx.createLinearGradient(-40,-46,40,46);
+      var hot = m>0.6;
+      grad.addColorStop(0, hot?'#7a4326':'#caa46a');
+      grad.addColorStop(.5, hot?'#3a2a1c':'#9c7e4c');
+      grad.addColorStop(1, hot?'#5a3320':'#7a5e34');
+      ctx.fillStyle=grad; ctx.fill();
+      ctx.strokeStyle=hot?'rgba(224,121,94,.8)':'rgba(241,196,143,.6)'; ctx.lineWidth=1.5; ctx.stroke();
+      // crown
+      ctx.beginPath(); ctx.arc(0,-52,6,0,6.28); ctx.fillStyle=hot?'#7a4326':'#caa46a'; ctx.fill();
+      // crack when dead
+      if(m>0.85){
+        ctx.beginPath(); ctx.moveTo(-4,-40); ctx.lineTo(6,-10); ctx.lineTo(-2,10); ctx.lineTo(8,46);
+        ctx.strokeStyle='rgba(10,10,12,.85)'; ctx.lineWidth=2; ctx.stroke();
+      }
+      ctx.restore();
+      if(!reduced) raf=requestAnimationFrame(draw);
+    }
+    function update(){
+      mass=parseFloat(slider.value)/100;
+      var L=labelFor(mass);
+      massV.textContent=L[0];
+      tone.textContent=L[1]; tone.className = L[2]?'tone warn':'tone';
+      note.innerHTML=L[3];
+      if(reduced) draw(0);
+    }
+    slider.addEventListener('input',update); update();
+    if(!reduced) raf=requestAnimationFrame(draw); else draw(0);
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){},150);});
+  })();
+
+  /* ================= GENERIC LINE-CHART AXES ================= */
+  function drawAxes(ctx,W,H,pad,x0,x1,labelEveryYears){
+    ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1;
+    ctx.fillStyle='rgba(188,184,173,.6)'; ctx.font='16px "IBM Plex Mono",monospace';
+    // horizontal gridlines at 0,.5,1
+    [0,.25,.5,.75,1].forEach(function(p){
+      var y=pad.t+(1-p)*(H-pad.t-pad.b);
+      ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y);
+      ctx.strokeStyle=p===0.5?'rgba(255,255,255,.18)':'rgba(255,255,255,.07)';
+      ctx.stroke();
+      ctx.textAlign='right'; ctx.fillText((p*100)+'%', pad.l-10, y+5);
+    });
+    // x labels (years) — tick every interval, but thin labels so they never collide
+    ctx.textAlign='center';
+    var lastLx=-1e9, minGap=54;
+    for(var yr=Math.ceil(x0/labelEveryYears)*labelEveryYears; yr<=x1; yr+=labelEveryYears){
+      var x=pad.l+((yr-x0)/(x1-x0))*(W-pad.l-pad.r);
+      ctx.beginPath(); ctx.moveTo(x,H-pad.b); ctx.lineTo(x,H-pad.b+5); ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.stroke();
+      if(x-lastLx<minGap) continue;
+      lastLx=x;
+      ctx.fillStyle='rgba(188,184,173,.55)';
+      ctx.fillText(yr, x, H-pad.b+25);
+    }
+  }
+
+  /* ================= SUBSTRATE CHART ================= */
+  function logistic(t,mid,k){ return 1/(1+Math.exp(-k*(t-mid))); }
+  (function(){
+    var cv=document.getElementById('substrate'); if(!cv) return;
+    var X0=2000, X1=2080, anim=0, raf, started=false;
+    var layers=[
+      {name:'Energy', col:'#e0795e', mid:2006, k:0.5},
+      {name:'Computation', col:'#6fd7e0', mid:2031, k:0.42},
+      {name:'Biology (experiments)', col:'#e0a85e', mid:2051, k:0.20}
+    ];
+    function render(){
+      var d=fit(cv,400), ctx=d.ctx, W=d.w, H=d.h;
+      var pad={l:56,r:18,t:22,b:42};
+      ctx.clearRect(0,0,W,H);
+      drawAxes(ctx,W,H,pad,X0,X1,20);
+      layers.forEach(function(L,idx){
+        ctx.beginPath();
+        var lastX,lastY;
+        for(var t=X0;t<=X1;t+=0.5){
+          var frac=Math.min(1,(t-X0)/(X1-X0));
+          if(frac>anim) break;
+          var v=Math.min(1,logistic(t,L.mid,L.k));
+          var x=pad.l+((t-X0)/(X1-X0))*(W-pad.l-pad.r);
+          var y=pad.t+(1-v)*(H-pad.t-pad.b);
+          if(t===X0)ctx.moveTo(x,y); else ctx.lineTo(x,y);
+          lastX=x;lastY=y;
+        }
+        ctx.strokeStyle=L.col; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.stroke();
+        if(lastX){ ctx.beginPath(); ctx.arc(lastX,lastY,3.5,0,6.28); ctx.fillStyle=L.col; ctx.fill(); }
+      });
+      // legend in the lower-right, where all curves have plateaued at the top
+      if(anim>=0.6){
+        ctx.font='600 16px "Inter",sans-serif'; ctx.textAlign='left';
+        var lx=W-pad.r-232, ly0=H-pad.b-78;
+        layers.forEach(function(L,idx){
+          var yy=ly0+idx*25;
+          ctx.fillStyle=L.col; ctx.beginPath(); ctx.arc(lx+5,yy-5,5,0,6.28); ctx.fill();
+          ctx.fillStyle='rgba(233,230,221,.88)'; ctx.fillText(L.name, lx+18, yy);
+        });
+      }
+    }
+    function step(){ anim=Math.min(1,anim+0.02); render(); if(anim<1) raf=requestAnimationFrame(step); }
+    var io2=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting&&!started){started=true; if(reduced){anim=1;render();} else step();}});},{threshold:.3});
+    io2.observe(cv);
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,150);});
+  })();
+
+  /* ================= TWO GATES CHART ================= */
+  (function(){
+    var cv=document.getElementById('gates'); if(!cv) return;
+    var X0=2010, X1=2090, anim=0, raf, started=false;
+    function M(t){ var rE=Math.min(1,logistic(t,2006,0.5)),rC=Math.min(1,logistic(t,2031,0.42)),rB=Math.min(1,logistic(t,2051,0.24));
+      return Math.pow(rE,0.2)*Math.pow(rC,0.3)*Math.pow(rB,0.5); }
+    function curves(){
+      var a=0,as=0,out=[];
+      for(var t=X0;t<=X1;t+=0.25){var m=M(t); as+=4*0.14*Math.pow(m,1.2)*0.25; a+=2.4*0.030*Math.pow(m,3.2)*0.25;
+        out.push({t:t,grow:1-Math.exp(-a),write:1-Math.exp(-as)});}
+      return out;
+    }
+    var data=curves();
+    function yAtCross(key){ for(var i=0;i<data.length;i++){ if(data[i][key]>=0.5) return data[i].t; } return null; }
+    function render(){
+      var d=fit(cv,480), ctx=d.ctx, W=d.w, H=d.h;
+      var pad={l:56,r:20,t:22,b:42};
+      ctx.clearRect(0,0,W,H);
+      drawAxes(ctx,W,H,pad,X0,X1,20);
+      function px(t){return pad.l+((t-X0)/(X1-X0))*(W-pad.l-pad.r);}
+      function py(v){return pad.t+(1-v)*(H-pad.t-pad.b);}
+      var cut=X0+anim*(X1-X0);
+      // write curve (cyan)
+      [['write','#6fd7e0',1.8],['grow','#e0a85e',3]].forEach(function(s){
+        ctx.beginPath();
+        for(var i=0;i<data.length;i++){ if(data[i].t>cut)break;
+          var x=px(data[i].t),y=py(data[i][s[0]]); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+        ctx.strokeStyle=s[1]; ctx.lineWidth=s[2]; ctx.lineJoin='round'; ctx.stroke();
+      });
+      // crossing markers (after anim done)
+      if(anim>=0.999){
+        var gw=yAtCross('write'), gg=yAtCross('grow');
+        [[gw,'#6fd7e0','writing'],[gg,'#e0a85e','growing']].forEach(function(c){
+          if(!c[0])return; var x=px(c[0]),y=py(0.5);
+          ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(x,py(0)); ctx.lineTo(x,y); ctx.strokeStyle=c[1]; ctx.globalAlpha=.5; ctx.stroke(); ctx.globalAlpha=1; ctx.setLineDash([]);
+          ctx.beginPath(); ctx.arc(x,y,5,0,6.28); ctx.fillStyle=c[1]; ctx.fill();
+          ctx.fillStyle=c[1]; ctx.font='600 16px "IBM Plex Mono",monospace'; ctx.textAlign='center';
+          ctx.fillText(Math.round(c[0]), x, py(0)-9);
+        });
+      }
+      // legend
+      ctx.font='600 18px "Inter",sans-serif'; ctx.textAlign='left';
+      ctx.fillStyle='#6fd7e0'; ctx.fillText('● Writing the genome (crosses early)', pad.l+8, pad.t+20);
+      ctx.fillStyle='#e0a85e'; ctx.fillText('● Growing the body — the binding gate', pad.l+8, pad.t+46);
+    }
+    function step(){anim=Math.min(1,anim+0.014);render(); if(anim<1)raf=requestAnimationFrame(step);}
+    var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!started){started=true; if(reduced){anim=1;render();}else step();}});},{threshold:.3});
+    io2.observe(cv);
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,150);});
+  })();
+
+  /* ================= KENT INTERACTIVE ================= */
+  (function(){
+    var cv=document.getElementById('kent'); if(!cv) return;
+    var X0=2025, X1=2120, DT=0.25;
+    var sAI=document.getElementById('sAI'), sDiff=document.getElementById('sDiff'), sInv=document.getElementById('sInv');
+    var sAIv=document.getElementById('sAIv'), sDiffv=document.getElementById('sDiffv'), sInvv=document.getElementById('sInvv');
+    var y10=document.getElementById('y10'), y50=document.getElementById('y50'), y90=document.getElementById('y90');
+    var presets={
+      base:{ai:56,diff:40,inv:78}, opt:{ai:90,diff:12,inv:95}, cons:{ai:40,diff:68,inv:45}, skeptic:{ai:10,diff:90,inv:25}
+    };
+    var cur={grow:[],write:[]}, target={grow:[],write:[]}, anim=1, raf=null;
+
+    function paramsFromUI(){
+      var ai=+sAI.value/100, diff=+sDiff.value/100, inv=+sInv.value/100;
+      var Adev = 0.5 + ai*3.5;                 // 0.5 .. 4.0
+      var bMid = 2040 + diff*40 - inv*7;        // biology midpoint
+      var bSteep = 0.13 + inv*0.17;
+      var pdev = 2.5 + diff*1.8;
+      return {Adev:Adev, bMid:bMid, bSteep:bSteep, pdev:pdev, kdev:0.030, ksyn:0.14, Asyn:4.0};
+    }
+    function Mt(t,p){ var rE=Math.min(1,logistic(t,2006,0.5)),rC=Math.min(1,logistic(t,2031,0.42)),rB=Math.min(1,logistic(t,p.bMid,p.bSteep));
+      return Math.pow(rE,0.2)*Math.pow(rC,0.3)*Math.pow(rB,0.5); }
+    function compute(){
+      var p=paramsFromUI(); var a=0,as=0; var g=[],w=[];
+      for(var t=X0;t<=X1;t+=DT){ var m=Mt(t,p);
+        a += p.Adev*p.kdev*Math.pow(m,p.pdev)*DT;
+        as += p.Asyn*p.ksyn*Math.pow(m,1.2)*DT;
+        g.push({t:t,v:1-Math.exp(-a)}); w.push({t:t,v:1-Math.exp(-as)});
+      }
+      return {grow:g, write:w};
+    }
+    function yearAt(arr,q){ for(var i=0;i<arr.length;i++){ if(arr[i].v>=q) return arr[i].t; } return null; }
+    function fmt(y){ return y? Math.round(y) : '>2120'; }
+
+    function render(){
+      var d=fit(cv,500), ctx=d.ctx, W=d.w, H=d.h;
+      var pad={l:56,r:20,t:24,b:42};
+      ctx.clearRect(0,0,W,H);
+      drawAxes(ctx,W,H,pad,X0,X1,20);
+      function px(t){return pad.l+((t-X0)/(X1-X0))*(W-pad.l-pad.r);}
+      function py(v){return pad.t+(1-v)*(H-pad.t-pad.b);}
+      // interpolate cur -> target
+      var G=[],Wr=[];
+      for(var i=0;i<target.grow.length;i++){
+        var cg=(cur.grow[i]?cur.grow[i].v:0), tg=target.grow[i].v;
+        var cw=(cur.write[i]?cur.write[i].v:0), tw=target.write[i].v;
+        G.push({t:target.grow[i].t, v:cg+(tg-cg)*anim});
+        Wr.push({t:target.write[i].t, v:cw+(tw-cw)*anim});
+      }
+      // write curve (faint)
+      ctx.beginPath();
+      for(var i=0;i<Wr.length;i++){var x=px(Wr[i].t),y=py(Wr[i].v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle='rgba(111,215,224,.42)'; ctx.lineWidth=1.6; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+      // grow curve (bold gold) with fill
+      ctx.beginPath();
+      for(var i=0;i<G.length;i++){var x=px(G[i].t),y=py(G[i].v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      var grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+      grad.addColorStop(0,'rgba(224,168,94,.30)'); grad.addColorStop(1,'rgba(224,168,94,0)');
+      ctx.save(); ctx.lineTo(px(X1),py(0)); ctx.lineTo(px(X0),py(0)); ctx.closePath(); ctx.fillStyle=grad; ctx.fill(); ctx.restore();
+      ctx.beginPath();
+      for(var i=0;i<G.length;i++){var x=px(G[i].t),y=py(G[i].v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle='#e0a85e'; ctx.lineWidth=3; ctx.lineJoin='round'; ctx.stroke();
+      // median marker
+      var ym=yearAt(target.grow,0.5);
+      if(ym){ var x=px(ym),y=py(0.5);
+        ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(x,py(0)); ctx.lineTo(x,py(1)); ctx.strokeStyle='rgba(241,196,143,.5)'; ctx.stroke(); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(x,y,6,0,6.28); ctx.fillStyle='#f1c48f'; ctx.fill();
+        ctx.fillStyle='#f1c48f'; ctx.font='700 18px "IBM Plex Mono",monospace'; ctx.textAlign='center';
+        ctx.fillText('bootstrap ≈ '+Math.round(ym), x, py(0.5)-18);
+      }
+      // legend
+      ctx.font='600 17px "Inter",sans-serif'; ctx.textAlign='left';
+      ctx.fillStyle='#e0a85e'; ctx.fillText('● K(t): can grow a body to order', pad.l+8, H-pad.b-18);
+      ctx.fillStyle='rgba(111,215,224,.7)'; ctx.fillText('- - - can write the genome', pad.l+8, H-pad.b-44);
+    }
+
+    function recompute(animate){
+      target=compute();
+      y10.textContent=fmt(yearAt(target.grow,0.1));
+      y50.textContent=fmt(yearAt(target.grow,0.5));
+      y90.textContent=fmt(yearAt(target.grow,0.9));
+      // slider value labels
+      sAIv.textContent = (+sAI.value<25?'skeptical':+sAI.value<55?'modest':+sAI.value<80?'strong':'transformative');
+      sDiffv.textContent = (+sDiff.value<25?'tractable':+sDiff.value<55?'hard':+sDiff.value<80?'very hard':'profound');
+      sInvv.textContent = (+sInv.value<25?'slow':+sInv.value<55?'steady':+sInv.value<80?'intense':'all-out');
+      if(animate && !reduced){
+        cur={grow:cur.grow.length?cur.grow:target.grow.map(function(p){return {t:p.t,v:p.v};}),
+             write:cur.write.length?cur.write:target.write.map(function(p){return {t:p.t,v:p.v};})};
+        anim=0; cancelAnimationFrame(raf);
+        (function go(){ anim=Math.min(1,anim+0.08); render(); if(anim<1) raf=requestAnimationFrame(go); else { cur={grow:target.grow.map(function(p){return{t:p.t,v:p.v};}),write:target.write.map(function(p){return{t:p.t,v:p.v};})}; } })();
+      } else { anim=1; cur={grow:target.grow.map(function(p){return{t:p.t,v:p.v};}),write:target.write.map(function(p){return{t:p.t,v:p.v};})}; render(); }
+    }
+
+    function setPreset(name){
+      var p=presets[name]; if(!p)return;
+      sAI.value=p.ai; sDiff.value=p.diff; sInv.value=p.inv;
+      document.querySelectorAll('.preset').forEach(function(b){b.classList.toggle('on', b.dataset.preset===name);});
+      recompute(true);
+    }
+    [sAI,sDiff,sInv].forEach(function(s){ s.addEventListener('input',function(){
+      document.querySelectorAll('.preset').forEach(function(b){b.classList.remove('on');});
+      recompute(false);
+    }); });
+    document.querySelectorAll('.preset').forEach(function(b){ b.addEventListener('click',function(){ setPreset(b.dataset.preset); }); });
+
+    // initial draw when scrolled into view
+    var started=false;
+    var io3=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting&&!started){started=true; recompute(true);} });},{threshold:.25});
+    io3.observe(cv);
+    recompute(false); // compute readouts immediately
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){render();},150);});
+  })();
+
+})();
+</script>
+</body>
+</html>
