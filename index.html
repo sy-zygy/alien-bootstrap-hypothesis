@@ -71,6 +71,20 @@ h1.title{font-family:var(--display);font-weight:560;font-size:clamp(2.7rem,8vw,5
 @keyframes fade{to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
+/* ---------- UFO ---------- */
+.ufo-wrap{position:absolute;z-index:1;top:24%;right:9%;width:clamp(100px,15vw,184px);
+  pointer-events:none;will-change:transform,opacity}
+.ufo{display:block;width:100%;height:auto;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.55));
+  animation:ufobob 6.5s ease-in-out infinite}
+@keyframes ufobob{0%,100%{transform:translateY(0) rotate(-1.3deg)}50%{transform:translateY(-10px) rotate(1.3deg)}}
+.ufo .lite{animation:ufoblink 2.4s ease-in-out infinite}
+.ufo .l1,.ufo .l3{filter:drop-shadow(0 0 3px rgba(241,196,143,.9))}
+.ufo .l2{filter:drop-shadow(0 0 3px rgba(111,215,224,.9));animation-delay:.5s}
+.ufo .l3{animation-delay:1s}
+@keyframes ufoblink{0%,100%{opacity:1}50%{opacity:.2}}
+@media(max-width:680px){.ufo-wrap{top:16%;right:5%;width:92px}}
+
 /* ---------- sections ---------- */
 main{position:relative;z-index:2;background:var(--bg)}
 .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;
@@ -135,6 +149,27 @@ footer .sep{margin:0 .6rem;color:var(--line)}
 <header class="hero">
   <canvas id="starfield"></canvas>
   <div class="hero-veil"></div>
+  <div class="ufo-wrap" aria-hidden="true">
+    <svg class="ufo" viewBox="0 28 120 40" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ufoBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5a616e"/>
+          <stop offset="45%" stop-color="#242932"/>
+          <stop offset="100%" stop-color="#0b0d12"/>
+        </linearGradient>
+        <radialGradient id="ufoGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#6fd7e0" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#6fd7e0" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="60" cy="54" rx="46" ry="11" fill="url(#ufoGlow)"/>
+      <ellipse cx="60" cy="44" rx="55" ry="13" fill="url(#ufoBody)" stroke="rgba(111,215,224,.25)" stroke-width="1"/>
+      <ellipse cx="60" cy="40" rx="46" ry="7.5" fill="rgba(150,166,186,.18)" stroke="rgba(241,196,143,.22)" stroke-width="1"/>
+      <circle class="lite l1" cx="33" cy="46" r="2.9" fill="#f1c48f"/>
+      <circle class="lite l2" cx="60" cy="48" r="2.9" fill="#6fd7e0"/>
+      <circle class="lite l3" cx="87" cy="46" r="2.9" fill="#f1c48f"/>
+    </svg>
+  </div>
   <div class="hero-inner">
     <p class="kicker">A Public Research Collection</p>
     <h1 class="title">The Alien Bootstrap Hypothesis</h1>
@@ -248,6 +283,30 @@ footer .sep{margin:0 .6rem;color:var(--line)}
   }
   start();
   var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(start,200);});
+})();
+
+/* ---------- UFO: fly off into space on scroll ---------- */
+(function(){
+  var ufo = document.querySelector('.ufo-wrap');
+  if(!ufo) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;   // leave it still; it simply scrolls away with the header
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh = window.innerHeight||800, vw = window.innerWidth||1200;
+    var p = Math.min(1, (window.pageYOffset||0)/(vh*0.85));   // 0 at top, 1 after ~one screen
+    var tx = (p*p)*(vw*0.20);          // drift right, accelerating
+    var ty = -p*(vh*0.72);             // climb away
+    var sc = 1 - p*0.74;               // recede into the distance
+    var rot = p*16;                    // bank as it leaves
+    ufo.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+sc.toFixed(3)+') rotate('+rot.toFixed(1)+'deg)';
+    ufo.style.opacity=(1 - Math.min(1,p*1.15)).toFixed(3);
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  update();
 })();
 </script>
 </body>
