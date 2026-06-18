@@ -1,21 +1,17 @@
-# Alien Bootstrap Hypothesis
+# The Alien Bootstrap Hypothesis
 
-A general-audience article on the Alien Bootstrap Hypothesis and the Kent Equation,
-by Gabriel Kent (Rhomega Corp.).
+A public research collection on the **Alien Bootstrap Hypothesis** and the **Kent Equation**.
 
-**Read it online:** https://sy-zygy.github.io/alien-bootstrap-hypothesis/
+**Read the article:** [The Alien Bootstrap Hypothesis](https://sy-zygy.github.io/alien-bootstrap-hypothesis/article)
 
-## Layout
+## Overview
 
-- `article/index.html` — the article (a self-contained HTML page). This folder is
-  what gets published to GitHub Pages.
-- `src/` — the source papers:
-  - `Alien Bootstrap Hypothesis.pdf`
-  - `The Kent Equation v5.pdf`
+The **Alien Bootstrap Hypothesis** starts from a constraint. What if UFOs didn't actually do much beyond travel and didn't actually scale well? What if an alien race happened to discover a physics unknown to us but aren't actually technologically superior to us in every ways?
 
-## Publishing
+The **Kent Equation** estimates K(t), the probability that by a given year a civilization can turn genetic information into a living, viable body on its own world. ABH calls the threshold where this becomes possible the *bootstrap point*.
 
-GitHub Pages is built by the workflow in `.github/workflows/pages.yml`, which
-publishes the `article/` folder. Any push to `main` that touches `article/`
-redeploys the live site automatically. The Pages source must be set to
-**GitHub Actions** (Settings → Pages → Build and deployment → Source).
+The implications of those constraints and the looming bootstrap point in our near future reveals a unique perspective on UFO and alien research over the last 80 years.
+
+## Source Papers
+- [`Alien Bootstrap Hypothesis v1`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/Alien%20Bootstrap%20Hypothesis.pdf)
+- [`The Kent Equation v5`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/The%20Kent%20Equation%20v5.pdf)
