@@ -228,6 +228,16 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
   .pullquote::before{width:240px;height:240px;margin:-120px 0 0 -120px}
   .pullquote::after{width:150px;height:150px;margin:-75px 0 0 -75px}
 }
+/* ---------- crossing UFO (hero → section I) ---------- */
+.ufo-cross{position:fixed;top:46vh;left:0;z-index:110;width:clamp(92px,12vw,150px);
+  opacity:0;pointer-events:none;will-change:transform,opacity}
+.ufo-cross .ufo{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 20px rgba(0,0,0,.5))}
+.ufo-cross .lite{animation:ufoblink 2.2s ease-in-out infinite}
+.ufo-cross .l1,.ufo-cross .l3{filter:drop-shadow(0 0 3px rgba(241,196,143,.9))}
+.ufo-cross .l2{filter:drop-shadow(0 0 3px rgba(111,215,224,.9));animation-delay:.45s}
+.ufo-cross .l3{animation-delay:.9s}
+@keyframes ufoblink{0%,100%{opacity:1}50%{opacity:.2}}
+@media(max-width:640px){.ufo-cross{width:84px;top:42vh}}
 </style>
 </head>
 <body>
@@ -246,6 +256,29 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
   </div>
   <div class="scroll-cue">Scroll<span></span></div>
 </header>
+
+<!-- crossing UFO: streaks across as you scroll from the hero into section I -->
+<div class="ufo-cross" aria-hidden="true">
+  <svg class="ufo" viewBox="0 28 120 40" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ufoBody2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5a616e"/>
+        <stop offset="45%" stop-color="#242932"/>
+        <stop offset="100%" stop-color="#0b0d12"/>
+      </linearGradient>
+      <radialGradient id="ufoGlow2" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#6fd7e0" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#6fd7e0" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="60" cy="54" rx="46" ry="11" fill="url(#ufoGlow2)"/>
+    <ellipse cx="60" cy="44" rx="55" ry="13" fill="url(#ufoBody2)" stroke="rgba(111,215,224,.25)" stroke-width="1"/>
+    <ellipse cx="60" cy="40" rx="46" ry="7.5" fill="rgba(150,166,186,.18)" stroke="rgba(241,196,143,.22)" stroke-width="1"/>
+    <circle class="lite l1" cx="33" cy="46" r="2.9" fill="#f1c48f"/>
+    <circle class="lite l2" cx="60" cy="48" r="2.9" fill="#6fd7e0"/>
+    <circle class="lite l3" cx="87" cy="46" r="2.9" fill="#f1c48f"/>
+  </svg>
+</div>
 
 <main>
 
@@ -1003,6 +1036,33 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
     var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){render();},150);});
   })();
 
+})();
+
+/* ---------- crossing UFO: flies across between the hero and section I ---------- */
+(function(){
+  var ufo = document.querySelector('.ufo-cross');
+  var sec1 = document.querySelector('main section');
+  if(!ufo || !sec1) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;   // no streak under reduced motion
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh = window.innerHeight||800, vw = window.innerWidth||1200;
+    var uw = ufo.offsetWidth||130;
+    var top = sec1.getBoundingClientRect().top;
+    var p = (vh*0.8 - top) / (vh*0.6);     // 0 when section I sits 80% down the viewport, 1 at 20%
+    if(p<=0 || p>=1){ ufo.style.opacity='0'; return; }
+    var tx = -uw + p*(vw + uw);            // slide in from the left, out the right
+    var ty = -Math.sin(p*Math.PI)*40;      // gentle upward arc mid-flight
+    var rot = -Math.cos(p*Math.PI)*5;      // bank through the swoop
+    ufo.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) rotate('+rot.toFixed(1)+'deg)';
+    ufo.style.opacity='1';
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  update();
 })();
 </script>
 </body>
