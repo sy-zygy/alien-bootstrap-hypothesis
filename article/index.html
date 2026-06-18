@@ -224,7 +224,7 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
 }
 @media(max-width:640px){
   .lede-first::first-letter{font-size:4.2rem}
-  .standfirst{font-size:1.16rem}
+  .standfirst{font-size:1.3rem}
   .pullquote::before{width:240px;height:240px;margin:-120px 0 0 -120px}
   .pullquote::after{width:150px;height:150px;margin:-75px 0 0 -75px}
 }
@@ -238,6 +238,15 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
 .ufo-cross .l3{animation-delay:.9s}
 @keyframes ufoblink{0%,100%{opacity:1}50%{opacity:.2}}
 @media(max-width:640px){.ufo-cross{width:84px;top:42vh}}
+/* ---------- section dot nav ---------- */
+.dotnav{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:115;display:flex;flex-direction:column;gap:13px}
+.dotnav .dot{position:relative;display:flex;align-items:center;width:18px;height:16px;border-bottom:0}
+.dotnav .dot-pt{width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid var(--ink-faint);transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+.dotnav .dot:hover .dot-pt{border-color:var(--cyan);transform:scale(1.25)}
+.dotnav .dot.on .dot-pt{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 9px rgba(111,215,224,.7)}
+.dotnav .dot-label{position:absolute;left:22px;top:50%;white-space:nowrap;font-family:var(--mono);font-size:.64rem;letter-spacing:.03em;color:var(--ink-soft);background:rgba(11,13,20,.94);border:1px solid var(--line);padding:.32rem .6rem;border-radius:7px;opacity:0;pointer-events:none;transform:translateY(-50%) translateX(-6px);transition:opacity .18s,transform .18s}
+.dotnav .dot:hover .dot-label,.dotnav .dot:focus-visible .dot-label{opacity:1;transform:translateY(-50%) translateX(0)}
+@media(max-width:1024px){.dotnav{display:none}}
 </style>
 </head>
 <body>
@@ -724,6 +733,8 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
     var massV=document.getElementById('bellMassV'), tone=document.getElementById('bellTone'),
         note=document.getElementById('bellNote');
     var mass=parseFloat(slider.value)/100, raf, t0=null;
+    slider.step='any';
+    var auto=!reduced, lastT=0, nowT=0, av=parseFloat(slider.value), lastKey=null;
     function labelFor(m){
       if(m<0.10) return ['empty','Tone: pure · clean ring',false,'A bell rings on one clear note. Its shape <em>is</em> the instrument.'];
       if(m<0.35) return ['light','Tone: warm · still ringing',false,'A few passengers. The note dulls a little, but it holds.'];
@@ -733,6 +744,9 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
     }
     function draw(ts){
       if(t0===null)t0=ts; var t=(ts-t0)/1000;
+      nowT=t;
+      if(auto){ var target=50-50*Math.cos(t*0.45); av+=(target-av)*0.05; slider.value=av; update(); }
+      else if(t-lastT>5){ auto=true; }
       var d=fit(cv,430), ctx=d.ctx, W=d.w, H=d.h;
       ctx.clearRect(0,0,W,H);
       var cx=W*0.44, cy=H*0.44, m=mass;
@@ -757,32 +771,57 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
         ctx.strokeStyle='rgba(111,215,224,'+alpha.toFixed(3)+')';
         ctx.lineWidth=1.4; ctx.stroke();
       }
-      // the bell shape (distorts with mass)
+      // the craft — a saucer that strains and finally breaks, like the bell
       ctx.save(); ctx.translate(cx,cy);
       var bscale=Math.max(1,Math.min(W,H)/300); ctx.scale(bscale,bscale);
-      var sag = 1 + warp*0.5;          // bell widens/sags
-      var lip = warp*18*Math.sin(t*8); // jitter at overload
-      ctx.beginPath();
-      ctx.moveTo(0,-46);
-      ctx.bezierCurveTo(26*sag,-44, 30*sag,-6, 40*sag,30);
-      ctx.quadraticCurveTo(42*sag,42, 30*sag+lip,46);
-      ctx.lineTo(-30*sag-lip,46);
-      ctx.quadraticCurveTo(-42*sag,42, -40*sag,30);
-      ctx.bezierCurveTo(-30*sag,-6, -26*sag,-44, 0,-46);
-      ctx.closePath();
-      var grad=ctx.createLinearGradient(-40,-46,40,46);
-      var hot = m>0.6;
-      grad.addColorStop(0, hot?'#7a4326':'#caa46a');
-      grad.addColorStop(.5, hot?'#3a2a1c':'#9c7e4c');
-      grad.addColorStop(1, hot?'#5a3320':'#7a5e34');
-      ctx.fillStyle=grad; ctx.fill();
-      ctx.strokeStyle=hot?'rgba(224,121,94,.8)':'rgba(241,196,143,.6)'; ctx.lineWidth=1.5; ctx.stroke();
-      // crown
-      ctx.beginPath(); ctx.arc(0,-52,6,0,6.28); ctx.fillStyle=hot?'#7a4326':'#caa46a'; ctx.fill();
-      // crack when dead
-      if(m>0.85){
-        ctx.beginPath(); ctx.moveTo(-4,-40); ctx.lineTo(6,-10); ctx.lineTo(-2,10); ctx.lineTo(8,46);
-        ctx.strokeStyle='rgba(10,10,12,.85)'; ctx.lineWidth=2; ctx.stroke();
+      var hot = m>0.6, broken = m>0.85;
+      var sag = 1 + warp*0.5;            // hull bulges/widens as mass is forced in
+      var wob = warp*8*Math.sin(t*8);    // rim wobble at overload
+      ctx.rotate(broken ? 0.10*Math.sin(t*3) : warp*0.04*Math.sin(t*6));
+      function bodyGrad(){
+        var g=ctx.createLinearGradient(0,-16,0,18);
+        if(broken){ g.addColorStop(0,'#3a2018'); g.addColorStop(.5,'#241410'); g.addColorStop(1,'#0a0a0c'); }
+        else if(hot){ g.addColorStop(0,'#7a4a2e'); g.addColorStop(.5,'#3a2418'); g.addColorStop(1,'#23130c'); }
+        else { g.addColorStop(0,'#5a616e'); g.addColorStop(.5,'#242932'); g.addColorStop(1,'#0b0d12'); }
+        return g;
+      }
+      var rimCol = broken?'rgba(120,50,40,.85)':(hot?'rgba(224,121,94,.8)':'rgba(111,215,224,.4)');
+      // drive glow beneath the craft — fades as the envelope is lost
+      if(m<0.85){
+        var gA=(1-m)*0.5;
+        var gg=ctx.createRadialGradient(0,10,2,0,10,52*sag);
+        gg.addColorStop(0,'rgba(111,215,224,'+gA.toFixed(3)+')');
+        gg.addColorStop(1,'rgba(111,215,224,0)');
+        ctx.fillStyle=gg; ctx.beginPath(); ctx.ellipse(0,12,48*sag,16,0,0,6.2832); ctx.fill();
+      }
+      // main disc (warps with mass)
+      ctx.beginPath(); ctx.ellipse(0, 4+wob*0.3, 46*sag, 13+warp*5, 0, 0, 6.2832);
+      ctx.fillStyle=bodyGrad(); ctx.fill();
+      ctx.strokeStyle=rimCol; ctx.lineWidth=1.4; ctx.stroke();
+      // upper hull
+      ctx.beginPath(); ctx.ellipse(0, -5, 29*(1-warp*0.12), 11, 0, 0, 6.2832);
+      ctx.fillStyle=bodyGrad(); ctx.fill();
+      // top highlight band
+      ctx.beginPath(); ctx.ellipse(0, -7, 25, 6, 0, 0, 6.2832);
+      ctx.strokeStyle=broken?'rgba(120,50,40,.45)':(hot?'rgba(224,150,120,.4)':'rgba(241,196,143,.35)'); ctx.lineWidth=1; ctx.stroke();
+      // rim lights — clean and bright when light, flicker out as it strains, dead when broken
+      var liteA = broken?0:Math.max(0, 1-m*1.25);
+      [[-30,6],[0,9],[30,6]].forEach(function(pt,idx){
+        var col = idx===1 ? '111,215,224' : '241,196,143';
+        var fl = liteA*(0.55+0.45*Math.sin(t*6+idx*2));
+        ctx.beginPath(); ctx.arc(pt[0], pt[1]+wob*0.3, 2.6, 0, 6.2832);
+        ctx.fillStyle='rgba('+col+','+fl.toFixed(3)+')'; ctx.fill();
+      });
+      // it breaks apart when slid all the way: cracks + flying chips
+      if(broken){
+        ctx.strokeStyle='rgba(8,8,10,.9)'; ctx.lineWidth=2; ctx.lineJoin='round';
+        ctx.beginPath(); ctx.moveTo(-34,-1); ctx.lineTo(-10,7); ctx.lineTo(2,-5); ctx.lineTo(18,9); ctx.lineTo(40,1); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0,-12); ctx.lineTo(6,3); ctx.lineTo(-3,15); ctx.stroke();
+        ctx.fillStyle='rgba(150,70,50,.85)';
+        var d1=3*Math.sin(t*4), d2=3*Math.cos(t*5);
+        ctx.beginPath(); ctx.arc(-52-d1,-6,2.2,0,6.2832); ctx.fill();
+        ctx.beginPath(); ctx.arc(54+d2,-2,2,0,6.2832); ctx.fill();
+        ctx.beginPath(); ctx.arc(10,-22-d1,1.8,0,6.2832); ctx.fill();
       }
       ctx.restore();
       if(!reduced) raf=requestAnimationFrame(draw);
@@ -790,12 +829,17 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
     function update(){
       mass=parseFloat(slider.value)/100;
       var L=labelFor(mass);
-      massV.textContent=L[0];
-      tone.textContent=L[1]; tone.className = L[2]?'tone warn':'tone';
-      note.innerHTML=L[3];
+      if(L[0]!==lastKey){
+        lastKey=L[0];
+        massV.textContent=L[0];
+        tone.textContent=L[1]; tone.className = L[2]?'tone warn':'tone';
+        note.innerHTML=L[3];
+      }
       if(reduced) draw(0);
     }
-    slider.addEventListener('input',update); update();
+    slider.addEventListener('input',function(){ auto=false; lastT=nowT; av=parseFloat(slider.value); update(); });
+    slider.addEventListener('pointerdown',function(){ auto=false; lastT=nowT; av=parseFloat(slider.value); });
+    update();
     if(!reduced) raf=requestAnimationFrame(draw); else draw(0);
     var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){},150);});
   })();
@@ -1063,6 +1107,34 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll, {passive:true});
   update();
+})();
+
+/* ---------- section dot nav: rollover labels + scroll-spy ---------- */
+(function(){
+  var secs = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+  if(secs.length < 2) return;
+  var nav=document.createElement('nav'); nav.className='dotnav'; nav.setAttribute('aria-label','Jump to section');
+  var dots=[];
+  secs.forEach(function(sec,i){
+    if(!sec.id) sec.id='sec-'+(i+1);
+    var ch=sec.querySelector('.chapter');
+    var title=ch?ch.textContent.replace(/\s+/g,' ').trim():('Section '+(i+1));
+    var a=document.createElement('a'); a.className='dot'; a.href='#'+sec.id; a.setAttribute('aria-label',title);
+    var pt=document.createElement('span'); pt.className='dot-pt';
+    var lb=document.createElement('span'); lb.className='dot-label'; lb.textContent=title;
+    a.appendChild(pt); a.appendChild(lb);
+    nav.appendChild(a); dots.push(a);
+  });
+  document.body.appendChild(nav);
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var idx=secs.indexOf(e.target);
+        for(var j=0;j<dots.length;j++) dots[j].classList.toggle('on', j===idx);
+      }
+    });
+  }, {rootMargin:'-45% 0px -45% 0px', threshold:0});
+  secs.forEach(function(s){ io.observe(s); });
 })();
 </script>
 </body>
