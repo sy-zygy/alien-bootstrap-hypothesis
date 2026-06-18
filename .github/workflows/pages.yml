@@ -1,3 +1,4 @@
+# Publishes the article/ folder to GitHub Pages (source: GitHub Actions).
 name: Deploy article to GitHub Pages
 
 on:
