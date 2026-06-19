@@ -13,5 +13,5 @@ The **Kent Equation** estimates K(t), the probability that by a given year a civ
 The implications of those constraints and the looming bootstrap point in our near future reveals a unique perspective on UFO and alien research over the last 80 years.
 
 ## Source Papers
-- [`Alien Bootstrap Hypothesis v1`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/Alien%20Bootstrap%20Hypothesis.pdf)
-- [`The Kent Equation v5`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/The%20Kent%20Equation%20v5.pdf)
+- [`Alien Bootstrap Hypothesis v3`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/Alien%20Bootstrap%20Hypothesis%20v3.pdf)
+- [`The Kent Equation v6`](https://github.com/sy-zygy/alien-bootstrap-hypothesis/blob/main/src/The%20Kent%20Equation%20v6.pdf)
