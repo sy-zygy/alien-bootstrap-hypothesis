@@ -93,7 +93,7 @@ p{margin:0 0 1.45rem}
   font-weight:600;padding:.05em .12em 0 0;color:var(--gold)}
 .standfirst{font-size:1.32rem;line-height:1.6;color:var(--ink);font-weight:420}
 strong{color:#fff;font-weight:600}
-em.key{font-style:normal;color:var(--cyan-soft);border-bottom:1px dotted rgba(111,215,224,.4)}
+em.key{font-style:normal;color:var(--cyan-soft)}
 .small{font-family:var(--sans);font-size:.92rem;color:var(--ink-soft);line-height:1.6}
 
 /* ---------- reveal ---------- */
@@ -237,7 +237,8 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
 .ufo-cross .l2{filter:drop-shadow(0 0 3px rgba(111,215,224,.9));animation-delay:.45s}
 .ufo-cross .l3{animation-delay:.9s}
 @keyframes ufoblink{0%,100%{opacity:1}50%{opacity:.2}}
-@media(max-width:640px){.ufo-cross{width:84px;top:42vh}}
+.ufo-cross.cross-xii{top:58vh}
+@media(max-width:640px){.ufo-cross{width:84px;top:42vh}.ufo-cross.cross-xii{top:54vh}}
 /* ---------- section dot nav ---------- */
 .dotnav{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:115;display:flex;flex-direction:column;gap:13px}
 .dotnav .dot{position:relative;display:flex;align-items:center;width:18px;height:16px;border-bottom:0}
@@ -565,8 +566,31 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
   </div>
 </section>
 
+<!-- crossing UFO #2: streaks right→left as you scroll into section XII -->
+<div class="ufo-cross cross-xii" aria-hidden="true">
+  <svg class="ufo" viewBox="0 28 120 40" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ufoBody3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5a616e"/>
+        <stop offset="45%" stop-color="#242932"/>
+        <stop offset="100%" stop-color="#0b0d12"/>
+      </linearGradient>
+      <radialGradient id="ufoGlow3" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#6fd7e0" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#6fd7e0" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="60" cy="54" rx="46" ry="11" fill="url(#ufoGlow3)"/>
+    <ellipse cx="60" cy="44" rx="55" ry="13" fill="url(#ufoBody3)" stroke="rgba(111,215,224,.25)" stroke-width="1"/>
+    <ellipse cx="60" cy="40" rx="46" ry="7.5" fill="rgba(150,166,186,.18)" stroke="rgba(241,196,143,.22)" stroke-width="1"/>
+    <circle class="lite l1" cx="33" cy="46" r="2.9" fill="#f1c48f"/>
+    <circle class="lite l2" cx="60" cy="48" r="2.9" fill="#6fd7e0"/>
+    <circle class="lite l3" cx="87" cy="46" r="2.9" fill="#f1c48f"/>
+  </svg>
+</div>
+
 <!-- ============ 12. THE CLOSE ============ -->
-<section>
+<section id="close">
   <div class="wrap">
     <p class="chapter reveal">XII · The Clock Still Ticks</p>
     <h2 class="reveal">Out of the hands of chance</h2>
@@ -1078,6 +1102,34 @@ footer h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-tra
     var ty = -Math.sin(p*Math.PI)*40;      // gentle upward arc mid-flight
     var rot = -Math.cos(p*Math.PI)*5;      // bank through the swoop
     ufo.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) rotate('+rot.toFixed(1)+'deg)';
+    ufo.style.opacity='1';
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  update();
+})();
+
+/* ---------- crossing UFO #2: flies right→left as you scroll into section XII ---------- */
+(function(){
+  var ufo = document.querySelector('.ufo-cross.cross-xii');
+  var sec = document.getElementById('close');
+  if(!ufo || !sec) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;   // no streak under reduced motion
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh = window.innerHeight||800, vw = window.innerWidth||1200;
+    var uw = ufo.offsetWidth||130;
+    var top = sec.getBoundingClientRect().top;
+    var p = (vh*0.8 - top) / (vh*0.6);     // 0 when section XII sits 80% down the viewport, 1 at 20%
+    if(p<=0 || p>=1){ ufo.style.opacity='0'; return; }
+    var tx = vw - p*(vw + uw);             // slide in from the right, out the left
+    var ty = -Math.sin(p*Math.PI)*40;      // gentle upward arc mid-flight
+    var rot = Math.cos(p*Math.PI)*5;       // bank through the swoop (mirrored)
+    var sc = 1 - p*0.6;                    // recede into the distance toward the left
+    ufo.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) rotate('+rot.toFixed(1)+'deg) scale('+sc.toFixed(3)+')';
     ufo.style.opacity='1';
   }
   function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
